@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string.h>
 #include <locale.h>
 #include <cstdlib>
@@ -7,184 +7,211 @@
 using namespace std;
 
 #define PI 3.14159265                                  
-
-class moving {
+ 
+int LifeCount = 15;
+class Mover {
 public:
-	double newlongtitude;
-	double newlatitude;
-	int speed;
-	moving() {
-		speed = 1 + rand() % (8 - 1 + 1);
-		newlongtitude = 0 + rand() % (180 - 0 + 1);
-		newlatitude = 0 + rand() % (90 - 0 + 1);
+	int Speed;
+	Mover() {
+		Speed = 1 + rand() % (8 - 1 + 1);
 	}
 
-	int get_speed() {
-		return speed;
+	int getSpeed() {
+		return Speed;
 	}
-
-	
-	
-	
-	double get_newlongtitude() {
-		return newlongtitude;
-	}
-
-	double get_newlatitude() {
-		return newlatitude;
-	}
-
-	void get_newCoordinates() {
-		cout << "\nНовая долгота: " << get_newlongtitude() << endl;
-		cout << "Новая широта: " << get_newlatitude() << endl << endl;
-	}
-
-
 };
 
-class Coordinates : public moving {
+class Coordinates : public Mover {
+
 public:
-	double longtitude;
-	double latitude;
+	double NewLongtitude = 900;
+	double NewLatitude = 900;
+	double Longtitude;
+	double Latitude;
 	double d;
 	double L;
 	double q;
 	
-	Coordinates(double dolg, double shirot) : moving() {
-		if (dolg >= 0 && dolg <= 180) 
-			longtitude = dolg;
+	Coordinates(double longtitude, double lantitude) : Mover() {
+		if (longtitude >= 0 && longtitude <= 180) 
+			Longtitude = longtitude;
 		else {
 			cout << "ОШИБКА: Неверно задана долгота" << endl;
-			longtitude = -1;
+			Longtitude = -1;
 		}
-		if (shirot >= 0 && shirot <= 90) 
-			latitude = shirot;
+		if (lantitude >= 0 && lantitude <= 90) 
+			Latitude = lantitude;
 		else {
 			cout << "ОШИБКА: Неверно задана широта" << endl;
-			latitude = -1;
+			Latitude = -1;
 		}
+		
 	}
 
-	void set_Coordinates(double dolg, double shirot) {
-		longtitude = dolg;
-		latitude = shirot;
+	void setCoordinates(double longtitude, double latitude) 
+	{		
+		Longtitude = longtitude;
+		Latitude = latitude;
+		NewLatitude = latitude;
+		NewLongtitude = longtitude;
 	}
 
-	double get_longtitude() {
-		return longtitude;
+	double getLonglitude() {
+		return Longtitude;
 	}
 
-	double get_latitude() {
-		return latitude;
+	double getLatitude() {
+		return Latitude;
 	}
 
-	void get_Coordinates() {
-		cout << "\nДолгота: " << get_longtitude() << endl;
-		cout << "Широта: " << get_latitude() << endl;
+	void printCoordinates() {
+		cout << "\nДолгота: " << getLonglitude() << endl;
+		cout << "Широта: " << getLatitude() << endl;
 	}
-	double get_dist() {
-		q = sin(latitude) * sin(newlatitude) + cos(latitude) * cos(newlatitude) * cos(abs(longtitude - newlongtitude));
+	
+	void setNewCoordinates() {
+		NewLongtitude = NewLongtitude + rand() % 1000 / 1000.;
+		NewLatitude = NewLatitude + rand() % 1000 / 1000. ;
+	}
+
+	double getNewLongtitude() 
+	{
+		return NewLongtitude;
+	}
+
+	double getNewLatitude() 
+	{
+		return NewLatitude;
+	}
+
+	void getNewCoordinates()
+	{
+		cout << "\nНовая долгота: " << getNewLongtitude() << endl;
+		cout << "Новая широта: " << getNewLatitude() << endl << endl;
+	}
+	double getDist() 
+	{
+		q = sin(Latitude) * sin(NewLatitude) + cos(Latitude) * cos(NewLatitude) * cos(abs(Longtitude - NewLongtitude));
 		d = abs(acos(q));
 		L = d * 6371;
 		return L;
 	}
 
-	
+
 };
 
-class HUMAN : public Coordinates {
+class HUMAN : public Coordinates 
+{
 private:
-	string name;
-	string surname;
-	string patronymiс;
-	double weight;
-	double height;
-	int speed;
-	int age;
+	string _name;
+	string _sureName;
+	string _patronymiс;
+	double _weight;
+	double _height;
+	int _speed;
+	int _age;
 	
 	
 public:
-	HUMAN(string sn, string nm, string pt, double a, double w, double h, double longt, double latit) : Coordinates(longt, latit) {
-		name = nm;
-		surname = sn;
-		patronymiс = pt;
-		age = a;
-		weight = w;
-		height = h;
-		speed = get_speed();
+	HUMAN(string sureName, string name, string patronymiс, double age, double weight, double height, double longt, double latit) : Coordinates(longt, latit) {
+		_name = name;
+		_sureName = sureName;
+		_patronymiс = patronymiс;
+		_age = age;
+		_weight = weight;
+		_height = height;
+		_speed = getSpeed();
 		
 	}
 
-	string get_nm() {
-		return name;
+	string getName() {
+		return _name;
 	}
 
-	string get_sn() {
-		return surname;
+	string getSurename() {
+		return _sureName;
 	}
 
-	string get_pt() {
-		return patronymiс;
+	string getPatronymic() {
+		return _patronymiс;
 	}
 
 	int get_age() {
-		return age;
+		return _age;
 	}
 
-	void get_name() {
-		cout << "Пользователь: " << get_sn();
-		cout << " " << get_nm();
-		cout << " " << get_pt()<<endl;
+	void printName() {
+		cout << "Пользователь: " << getSurename();
+		cout << " " << getName();
+		cout << " " << getPatronymic()<<endl;
 	}
 
-	void set_name(string nm, string sn, string pt) {
-		name = nm;
-		surname = sn;
-		patronymiс = pt;
+	void setName(string name, string sureName, string patronymic) {
+		_name = name;
+		_sureName = sureName;
+		_patronymiс = patronymic;
 	}
 
-	double get_weight() {
-		return weight;
+	double getWeight() {
+		return _weight;
 	}
 
-	double get_height() {
-		return height;
+	double getHeight() {
+		return _height;
 	}
 
-	void get_parameters() {
+	void printParameters() {
 		cout << "\nВозраст: " << get_age() << endl;
-		cout << "\nВес: " << get_weight() << endl;
-		cout << "Рост: " << get_height() << endl;
+		cout << "\nВес: " << getWeight() << endl;
+		cout << "Рост: " << getHeight() << endl;
 	}
 
-	void set_parameters(int a, double w, double h) {
-		age = a;
-		weight = w;
-		height = h;
+	void setParameters(int age, double weight, double height) {
+		_age = age;
+		_weight = weight;
+		_height = height;
 	}
-	
-
-	
 };
+
+void printHumanInfo(HUMAN* firstHuman);
+
+void printBaseInfo(HUMAN* firstHuman);
 
 int main() {
 	setlocale(LC_ALL, "Russian");
-	HUMAN* firsthuman = new HUMAN ("Иванов", "Иван", "Иванович", 23, 85, 189, 88, 77);
-	firsthuman->get_name();
-	firsthuman->get_parameters();
-	firsthuman->get_Coordinates();
-	firsthuman->get_newCoordinates();
-	cout << "Скорость движения: " << firsthuman->get_speed() << " км/ч" << endl;
-	cout << "Расстояние: " << firsthuman->get_dist() << " км" << endl;
-	cout << "Время:" << firsthuman->get_dist()/ firsthuman->get_speed()<< " часов"<<endl;
-	cout << endl;
+	HUMAN* firstHuman = new HUMAN ("Иванов", "Иван", "Иванович", 23, 85, 189, 88, 77);
 	HUMAN* secondhuman = new HUMAN("Петров", "Александр", "Геннадьевич", 69, 102, 175, 96.3, 89);
-	secondhuman->get_name();
-	secondhuman->get_parameters();
-	secondhuman->get_Coordinates();
-	secondhuman->get_newCoordinates();
-	cout << "Скорость движения: " << secondhuman->get_speed() << " км/ч" << endl;
-	cout << "Расстояние: " << secondhuman->get_dist() << " км" << endl;
-	cout << "Время:" << secondhuman->get_dist() / secondhuman->get_speed() << " часов"<<endl;
+
+	printBaseInfo(firstHuman);
+	for (int i = 0; i < LifeCount; i++) 
+	{
+		firstHuman->setNewCoordinates();
+		firstHuman->getNewCoordinates();
+	}
+	printHumanInfo(firstHuman);
+
+	printBaseInfo(secondhuman);
+	for (int i = 0; i < LifeCount; i++) 
+	{
+		secondhuman->setNewCoordinates();
+		secondhuman->getNewCoordinates();
+	}
+	printHumanInfo(secondhuman);
+
+	return 0;
+}
+
+void printBaseInfo(HUMAN* human)
+{
+	human->printName();
+	human->printParameters();
+	human->printCoordinates();
+}
+
+void printHumanInfo(HUMAN* human)
+{
+	cout << "Скорость движения: " << human->getSpeed() << " км/ч" << endl;
+	cout << "Расстояние: " << human->getDist() << " км" << endl;
+	cout << "Время:" << human->getDist() / human->getSpeed() << " часов" << endl;
 	cout << endl;
 }
